@@ -37,6 +37,24 @@ def test_do_not_step_on_enemy():
     next_move, _ = move(bot, None)
     assert next_move == (5, 2)
 
+def test_closest_food():
+    # pick the food pellet that is closest (as opposed to randomly picking a pellet)
+    layout = """
+    ############
+    #       EE #
+    #     .    #
+    #          #
+    #     0    #
+    #          #
+    #1       . #
+    ############
+    """
+
+    bot = setup_test_game(layout=layout, is_blue=True)
+    next_move, _ = move(bot, None)
+    assert next_move == (6,3)
+
+
 def test_shortest_path():
     # is the Graph implementation in pelita giving us the shortest path to the
     # food pellet? And are we really following it?
