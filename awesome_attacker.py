@@ -125,14 +125,14 @@ def move(turn, game, randomness=1e0):
             # look for not stupid moves
             legal_moves = []
             for i in bot.legal_moves:
-                if not thats_stupid(bot.homezone, bot.get_position(i), enemy_pos):
+                if not thats_stupid(bot.homezone, i, enemy_pos):
                     legal_moves.append(i)
             if len(legal_moves) == 0:
                 next_pos = bot.position
             else:
                 # Randomly select one of the available options
                 bot.say(bot.random.choice(DESPERATE_MESSAGES))
-                next_pos = bot.get_position(bot.random.choice(legal_moves))
+                next_pos = bot.random.choice(legal_moves))
         else:
             next_pos = bot.track[-2]
 

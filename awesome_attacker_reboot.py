@@ -3,9 +3,27 @@ import numpy as np
 TEAM_NAME = 'Awesome Attacker Reboot'
 
 from pelita.utils import Graph
-
 from utils import shortest_path
 
+def thats_stupid(homezone, next_pos, enemy_pos):
+    """
+    Test if the next move would be a stupid one:
+    1. Jump on an enemy (very stupid)
+    2. Jump next to an enemy to get eaten (still stupid)
+    Both of course only true if in enemies territory.
+    """
+    if (next_pos in enemy_pos) and (next_pos not in homezone):
+        return True
+    elif ((next_pos[0], next_pos[1] + 1) in enemy_pos) and (next_pos not in homezone):
+        return True
+    elif ((next_pos[0] + 1, next_pos[1]) in enemy_pos) and (next_pos not in homezone):
+        return True
+    elif ((next_pos[0], next_pos[1] - 1) in enemy_pos) and (next_pos not in homezone):
+        return True
+    elif ((next_pos[0] - 1, next_pos[1]) in enemy_pos) and (next_pos not in homezone):
+        return True
+    else:
+        return False
 
 def move(bot, state, randomness = 1e0):
     enemy = bot.enemy
@@ -69,5 +87,34 @@ def move(bot, state, randomness = 1e0):
             # Choose one safe position at random (this always includes the
             # current position
             next_pos = bot.random.choice(safe_positions)
+
+    # now, let's check if we are getting too near to our enemy
+    # where are the enemy ghosts?
+
+    enemy_pos = [bot.enemy[0].position, bot.enemy[1].position]
+    if thats_stupid(bot.homezone, next_pos, enemy_pos):
+        # we are in the enemy zone: they can eat us!
+        # 1. let's forget about this target (the enemy is sitting on it for
+        #    now). We will choose a new target in the next round
+        state[bot.turn] = (None, None)
+        # 2. let us step back
+        # bot.track[-1] is always the current position, so to backtrack
+        # we select bot.track[-2]
+        if thats_stupid(bot.homezone, bot.track[-2], enemy_pos):
+            # look for not stupid moves
+            legal_moves = []
+            for i in bot.legal_positions:
+                if not thats_stupid(bot.homezone, i, enemy_pos):
+                    legal_moves.append(i)
+            if len(legal_moves) == 0:
+                next_pos = bot.position
+            else:
+                # Randomly select one of the available options
+                #bot.say(bot.random.choice(DESPERATE_MESSAGES))
+                #next_pos = bot.get_position(bot.random.choice(legal_moves))
+                next_pos = bot.random.choice(legal_moves)
+
+        else:
+            next_pos = bot.track[-2]
 
     return next_pos, state
