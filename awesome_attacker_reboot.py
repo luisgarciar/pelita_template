@@ -83,11 +83,12 @@ def move(bot, state, randomness = 1e0):
         from networkx import all_simple_paths
         return all_simple_paths(graph,bot_position, target_position)
 
-    if bot.track[-1] == bot.track[-3] == bot.track[-5] and bot.track[-2] == bot.track[-4] == bot.track[-6]:
-        path_options = simple_paths(state['graph'],bot.position, target)
-        path = random.choice(path_options)
-        state[bot.turn] = (target,path)
-        next_pos = path.pop()
+    if len(bot.track) >6:
+        if bot.track[-1] == bot.track[-3] == bot.track[-5] and bot.track[-2] == bot.track[-4] == bot.track[-6]:
+            path_options = simple_paths(state['graph'],bot.position, target)
+            path = random.choice(path_options)
+            state[bot.turn] = (target,path)
+            next_pos = path.pop()
 
 
 
