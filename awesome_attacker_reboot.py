@@ -76,17 +76,16 @@ def move(bot, state, randomness = 1e0):
     ## Getting unstuck
     # Sometimes the target we've selected gets us stuck in a loop.
     # Option 1: change the target
-    (a,b) = bot.position
-    neighbors = [(a,b),(a,b+1),(a,b-1),(a+1,b),(a-1,b)]
+    #(a,b) = bot.position
+    #neighbors = [(a,b),(a,b+1),(a,b-1),(a+1,b),(a-1,b)]
 
-    if len(bot.track) >= 4:
-        if len(intersection(neighbors,bot.track[-4:])) <= 2
+    if len(bot.track) >= 8:
+        if len(set(bot.track[-8:])) <= 4:
             # position of the target food pellet
             target = bot.random.choice(enemy[0].food)
             # shortest path from here to the target
             path = shortest_path(bot.position, target, state['graph'])
             state[bot.turn] = (target, path)
-
 
     # Option 2: change the path to the target.
     # if the bot is in a "flip-loop": changing between 2 positions 4 times.
@@ -147,7 +146,6 @@ def move(bot, state, randomness = 1e0):
                 #bot.say(bot.random.choice(DESPERATE_MESSAGES))
                 #next_pos = bot.get_position(bot.random.choice(legal_moves))
                 next_pos = bot.random.choice(legal_moves)
-
         else:
             if len(bot.track)>=2:
                 next_pos = bot.track[-2]
