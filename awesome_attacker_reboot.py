@@ -5,6 +5,9 @@ TEAM_NAME = 'Awesome Attacker Reboot'
 from pelita.utils import Graph
 from utils import shortest_path
 
+def intersection(lst1, lst2):
+    return list(set(lst1) & set(lst2))
+
 def thats_stupid(homezone, next_pos, enemy_pos):
     """
     Test if the next move would be a stupid one:
@@ -73,8 +76,11 @@ def move(bot, state, randomness = 1e0):
     ## Getting unstuck
     # Sometimes the target we've selected gets us stuck in a loop.
     # Option 1: change the target
+    (a,b) = bot.position
+    neighbors = [(a,b),(a,b+1),(a,b-1),(a+1,b),(a-1,b)]
+
     if len(bot.track) >= 4:
-        if bot.track[-1]==bot.track[-3] and bot.track[-2]==bot.track[-4]:
+        if len(intersection(neighbors,bot.track[-4:])) <= 2
             # position of the target food pellet
             target = bot.random.choice(enemy[0].food)
             # shortest path from here to the target
@@ -98,7 +104,6 @@ def move(bot, state, randomness = 1e0):
     #         path = random.choice(path_options)
     #         state[bot.turn] = (target,path)
     #         next_pos = path.pop()
-
 
     # if we are not in our homezone we should check if it is safe to proceed
     if next_pos not in bot.homezone:
