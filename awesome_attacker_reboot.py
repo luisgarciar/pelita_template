@@ -67,10 +67,30 @@ def move(bot, state, randomness = 1e0):
         # shortest path from here to the target
         path = shortest_path(bot.position, target, state['graph'])
         state[bot.turn] = (target, path)
-
-
     # get the next position along the shortest path to reach our target
     next_pos = path.pop()
+
+    ## Getting unstuck
+    # Sometimes the target we've selected gets us stuck in a loop.
+    # Option 1: change the target
+    # Option 2: change the path to the target.
+    # if the bot is in a "flip-loop": changing between 2 positions 4 times.
+    # use networkx function to get all path options to a target and select one
+    # of those paths (instead of the shortest path) to get unstuck.
+    def simple_paths(graph, bot_position, target_position):
+        """Given a graph representation of the maze, return the all paths to target_position.
+        This uses the simple-path algorirthm from the networkx package"""
+        from networkx import all_simple_paths
+        return all_simple_paths(graph,bot_position, target_position)
+
+    if bot.track[-1] == bot.track[-3] == bot.track[-5] and bot.track[-2] == bot.track[-4] == bot.track[-6]:
+        path_options = simple_paths(state['graph'],bot.position, target)
+        path = random.choice(path_options)
+        state[bot.turn] = (target,path)
+        next_pos = path.pop()
+
+
+
     # if we are not in our homezone we should check if it is safe to proceed
     if next_pos not in bot.homezone:
         # get a list of safe positions
