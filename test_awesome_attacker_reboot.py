@@ -54,7 +54,7 @@ def test_closest_food():
     next_move, _ = move(bot, None)
     assert next_move == (6,3)
 
-    
+
 def test_shortest_path():
     # is the Graph implementation in pelita giving us the shortest path to the
     # food pellet? And are we really following it?
@@ -98,36 +98,36 @@ def test_shortest_path():
             assert next_pos == path[idx+1]
 
 def test_not_stuck():
-     # do we get stuck in a loop?
-      l="""
-      ################
-      #         .   #
-      #         E    #
-      #              #
-      #         #    #
-      #          .   #
-      #E            .#
-      ################
-      """
-#    initial layout="""
-     ################
-     #1         .   #
-     #         E    #
-     #        0     #
-     #         #    #
-     #          .   #
-     #E            .#
-     ################
-#     """
-     neighbors = [(9,3),(9,2),(9,4),(10,3),(8,3)]
-     init = (9,3)
-     state = None
-#
-      for i in range(4):
-          bot = setup_test_game(layout=l, is_blue=True, bots=[init, (1, 1)])
-          init, state = move(bot, state)
+    # do we get stuck in a loop?
+    l="""
+    ################
+    #         .    #
+    #         E    #
+    #              #
+    #         #    #
+    #          .   #
+    #E            .#
+    ################
+    """
+    #    initial layout="""
+    ################
+    #1         .   #
+    #         E    #
+    #        0     #
+    #         #    #
+    #          .   #
+    #E            .#
+    ################
+    #     """
+    neighbors = [(9,3),(9,2),(9,4),(10,3),(8,3)]
+    init = (9,3)
+    state = None
+    #
+    for i in range(4):
+        bot = setup_test_game(layout=l, is_blue=True, bots=[init, (1, 1)])
+        init, state = move(bot, state)
 
-     assert len(intersection(neighbors,bot.track[-4:])) <= 2
+    assert len(intersection(neighbors,bot.track[-4:])) <= 2
 
 def intersection(lst1, lst2):
     return list(set(lst1) & set(lst2))
